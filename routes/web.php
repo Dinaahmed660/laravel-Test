@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\AddingCar;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
- Route::get('test', function(){
-    return 'Welcome to my first route';
+Route::get('test',function(){
+return 'welcome to my first route';
 });
 
 Route::get('user/{name}/{age?}', function($name, $age=0){
@@ -27,12 +28,13 @@ Route::get('user/{name}/{age?}', function($name, $age=0){
     }
     else {
         return 'this user name is : ' . $name;}
-    })->whereIn('name',['Dina','Masa']);
-    //->where(['name'=>'[a-zA-Z-0-9]+' , 'age'=>'[0-9]+']);//->whereNumber('age'); // Methode where number
-// })->where(['age' =>'[0-9]+']); .... special char way
+    })->whereIn('name',['Dina','Masa']); //user name must  be Dina or Masa
+    //->where(['name'=>'[a-zA-Z-0-9]+' , 'age'=>'[0-9]+']);
+    // })->where(['age' =>'[0-9]+']); .... special char way
     //->whereAlpha('name');....... special char way
-
-
+    //->whereNumber('age'); // Methode where number
+    
+   
     Route:: prefix('product')-> group(function(){
         Route::get('laptop', function(){
             return 'laptop page';
@@ -78,3 +80,43 @@ Route::get('user/{name}/{age?}', function($name, $age=0){
             return 'logistic page';
         });
     });
+  //**************************************************** */
+    // redirecting to laravel page if there is an error
+    // Route::fallback(function(){
+    //     return redirect('/');
+    //     });
+    //************************************ */
+    //going to cv blade.php
+    Route::get('cv', function(){
+        return view ('cv');
+    });
+    
+    //************************************ */
+    // making the form
+
+    //step 1  going to login page
+    Route::get('login', function(){
+        return view ('login');
+    });
+//************************************ */
+    //step 2 when clicking on submit button
+    Route::post('recieve', function(){
+        return ('Data recieved');
+    })->name('recieve');
+    //step3 changing get to post 
+    //changing action and method in the form
+    //Putting @csrf
+
+    Route::get('test1',[ExampleController::class,'test1']);
+    //******************************************* */
+    //task3 add car (step 1 )
+    Route::get('addcar', function(){
+        return view ('addcar');
+    });
+    //step 2
+    Route::post('store', function(){
+        return ('Data recieved');
+    })->name('store');
+
+    Route::get('test',[AddingCarController::class,'test']);
+    Route::post('test\store',[AddingCarController::class,'store'])->name('store');
