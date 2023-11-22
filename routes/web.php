@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\AddingCar;
+use App\Http\Controllers\CarController;
+use App\Http\Controllers\NewsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -110,13 +112,24 @@ Route::get('user/{name}/{age?}', function($name, $age=0){
     Route::get('test1',[ExampleController::class,'test1']);
     //******************************************* */
     //task3 add car (step 1 )
-    Route::get('addcar', function(){
-        return view ('addcar');
-    });
-    //step 2
-    Route::post('store', function(){
-        return ('Data recieved');
-    })->name('store');
+    // Route::get('addcar', function(){
+    //     return view ('addcar');
+    // });
+    // //step 2
+    // Route::post('store', function(){
+    //     return ('Data recieved');
+    // })->name('store');
 
-    Route::get('test',[AddingCarController::class,'test']);
-    Route::post('test\store',[AddingCarController::class,'store'])->name('store');
+    // Route::get('test',[AddingCarController::class,'test']);
+    // Route::post('test\store',[AddingCarController::class,'store'])->name('store');
+   
+    Route::get('addcar',[CarController::class,'store']);
+
+    //***********************************/
+    //Task news
+    Route::get('addNews', function(){
+        return view ('news');
+    });
+
+    Route::get('addNews',[NewsController::class,'recieved']);
+    Route::post('news',[NewsController::class,'store'])->name('store');
