@@ -5,6 +5,7 @@ use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\AddingCar;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\NewsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -131,5 +132,15 @@ Route::get('user/{name}/{age?}', function($name, $age=0){
         return view ('news');
     });
 
-    Route::get('addNews',[NewsController::class,'recieved']);
+    
+
+    Route::get('cars',[CarController::class,'index']);
+    Route::get('editCar/{id}',[CarController::class,'edit']);
+    Route::put('updateCar/{id}',[CarController::class,'update'])->name('updateCar');
+
+    Route::get('addNews',[NewsController::class,'store']);
     Route::post('news',[NewsController::class,'store'])->name('store');
+
+    Route::get('newslist',[NewsController::class,'index']);
+    Route::get('editNew/{id}',[NewsController::class,'edit']);
+    Route::put('updateNew/{id}',[NewsController::class,'update'])->name('updateNew');
