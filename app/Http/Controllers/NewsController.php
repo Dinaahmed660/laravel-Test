@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use App\Models\News;
 
 class NewsController extends Controller
@@ -14,8 +15,7 @@ class NewsController extends Controller
     public function index()
     {
         $News = News::get();
-
-        return view('news',compact('news'));
+        return view('newslist',compact('News'));
     }
 
     /**
@@ -23,7 +23,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        //
+        return view('addNews');
     }
 
     /**
@@ -43,7 +43,8 @@ class NewsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $News = News::findOrFail($id);
+        return view('NewsDetails',compact('News'));
     }
 
     /**
@@ -59,14 +60,26 @@ class NewsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        News::where('id', $id)->update($request->only($this->columns));
+        return 'Updated';
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id) : RedirectResponse
     {
-        //
+        News::where('id', $id)->delete();
+        return redirect('News');
+    }
+    public function trashed(){
+        $News = News::onlyTrashed()->get();
+        return view('trashedNews', compact('News'));
+    }
+
+    public function restore(string $id): RedirectResponse
+    {
+        News::where('id', $id)->restore();
+        return redirect('newslist');
     }
 }

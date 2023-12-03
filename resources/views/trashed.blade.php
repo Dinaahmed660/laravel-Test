@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Car List</title>
+  <title>Trashed Car List</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -11,7 +11,7 @@
 <body>
 
 <div class="container">
-  <h2>List</h2>
+  <h2>Trashed List</h2>
   <p>The .table-hover class enables a hover state on table rows:</p>            
   <table class="table table-hover">
     <thead>
@@ -19,8 +19,7 @@
         <th>Title</th>
         <th>Content</th>
         <th>Published</th>
-        <th>Edit</th>
-        <th>Show</th>
+        <th>Restore</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -36,8 +35,7 @@
                 No
             @endif
         </td>
-        <td><a href="editCar/{{ $car->id }}">Edit</a></td>
-        <td><a href="carDetails/{{ $car->id }}">Show</a></td>
+        <td><a href="restoreCar/{{ $car->id }}">Restore</a></td>
         <td><a href="deleteCar/{{ $car->id }}">Delete</a></td>
       </tr>
 @endforeach     

@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use App\Models\Car;
+use Symfony\Component\HttpFoundation\Test\Constraint\ResponseIsRedirected;
 
 class CarController extends Controller
 {
+    private $columns = ['carTitle', 'description','published'];
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $cars = Car::get();
-
-        return view('cars',compact('cars'));
+        return view('cars', compact('cars'));
     }
 
     /**
@@ -23,7 +25,7 @@ class CarController extends Controller
      */
     public function create()
     {
-        //
+        return view('addCar');
     }
 
     /**
@@ -31,12 +33,25 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        $car= new car;
-        $car-> carTitle="BMW";
-        $car-> description="the description here";
-        $car-> published=true;
-        $car-> save();
-        return "Car data added successfully";
+        // $cars = new Car;
+        // $cars->carTitle = $request->title;
+        // $cars->description = $request->description;
+        $data = ($request->only($this->columns));
+        $data['published']=isset ($data['published'])?true:false;
+        $request->validate([
+            'carTitle'=>'required|string|max:5',
+            'description'=> 'required|string'
+            ]);    
+            Car::create($data);
+            return 'done';
+
+        // if(isset($request->published)){
+        //     $cars->published = true;
+        // }else{
+        //     $cars->published = false;
+        // }
+        // $cars->save();
+        // return "Car data added successfully";
     }
 
     /**
@@ -44,7 +59,8 @@ class CarController extends Controller
      */
     public function show(string $id)
     {
-        
+        $car = Car::findOrFail($id);
+        return view('carDetails',compact('car'));
     }
 
     /**
@@ -52,8 +68,8 @@ class CarController extends Controller
      */
     public function edit(string $id)
     {
-        return view('updateCar');
-     // return "car id is ". $id;
+        $car = Car::findOrFail($id);
+        return view('updateCar',compact('car'));
     }
 
     /**
@@ -61,14 +77,33 @@ class CarController extends Controller
      */
     public function update(Request $request, string $id)
     {
-       
+
+        // $data = $request->only($this->columns);
+        // $data['published'] = isset($data['published'])? true:false;
+
+        // Car::where('id', $id)->update($data);
+
+        Car::where('id', $id)->update($request->only($this->columns));
+        return 'Updated';
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
-        //
+        Car::where('id', $id)->delete();
+        return redirect('cars');
+    }
+
+    public function trashed(){
+        $cars = Car::onlyTrashed()->get();
+        return view('trashed', compact('cars'));
+    }
+
+    public function restore(string $id): RedirectResponse
+    {
+        Car::where('id', $id)->restore();
+        return redirect('cars');
     }
 }

@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExampleController;
-use App\Http\Controllers\AddingCar;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PostsController;
+use App\Http\Controllers\CoffeeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,126 +23,107 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('test',function(){
-return 'welcome to my first route';
+Route::get('test', function(){
+    return 'Welcome to my first route';
 });
 
-Route::get('user/{name}/{age?}', function($name, $age=0){
-    if ( $age!==0){
-        return 'this user name is : ' . $name . ' and my age is : ' . $age ;
+Route::get ('user/{name}/{age?}',function($name,$age=0){
+    $msg = 'the username is : ' . $name;
+    if($age > 0){
+        $msg .= ' and the age is: '. $age ;
     }
-    else {
-        return 'this user name is : ' . $name;}
-    })->whereIn('name',['Dina','Masa']); //user name must  be Dina or Masa
-    //->where(['name'=>'[a-zA-Z-0-9]+' , 'age'=>'[0-9]+']);
-    // })->where(['age' =>'[0-9]+']); .... special char way
-    //->whereAlpha('name');....... special char way
-    //->whereNumber('age'); // Methode where number
-    
-   
-    Route:: prefix('product')-> group(function(){
-        Route::get('laptop', function(){
-            return 'laptop page';
-        });
+    return $msg;
+})->whereIn('name',['Peter','Tony']);
 
-        Route::get('camera', function(){
-            return 'camera page';
-        });
+Route::prefix('product')->group(function(){
+
+    Route::get('/',function(){
+        return 'Products home page';
     });
 
-    //************************ task */
-    Route::get('about', function(){
-        return 'Welcome to my about page';
-    });
-    Route::get('contact', function(){
-        return 'Welcome to contact page';
-    });
-    Route:: prefix('support')-> group(function(){
-        Route::get('chat', function(){
-            return 'chat page';
-        });
-
-        Route::get('call', function(){
-            return 'call page';
-        });
-        Route::get('ticket', function(){
-            return 'ticket page';
-        });
+    Route::get('laptop',function(){
+        return 'Laptop page';
     });
 
-    Route:: prefix('Training')-> group(function(){
-        Route::get('HR', function(){
-            return 'HR page';
-        });
-
-        Route::get('ICT', function(){
-            return 'ICT page';
-        });
-        Route::get('Marketing', function(){
-            return 'Marketing page';
-        });
-        Route::get('logistic', function(){
-            return 'logistic page';
-        });
-    });
-  //**************************************************** */
-    // redirecting to laravel page if there is an error
-    // Route::fallback(function(){
-    //     return redirect('/');
-    //     });
-    //************************************ */
-    //going to cv blade.php
-    Route::get('cv', function(){
-        return view ('cv');
-    });
-    
-    //************************************ */
-    // making the form
-
-    //step 1  going to login page
-    Route::get('login', function(){
-        return view ('login');
-    });
-//************************************ */
-    //step 2 when clicking on submit button
-    Route::post('recieve', function(){
-        return ('Data recieved');
-    })->name('recieve');
-    //step3 changing get to post 
-    //changing action and method in the form
-    //Putting @csrf
-
-    Route::get('test1',[ExampleController::class,'test1']);
-    //******************************************* */
-    //task3 add car (step 1 )
-    // Route::get('addcar', function(){
-    //     return view ('addcar');
-    // });
-    // //step 2
-    // Route::post('store', function(){
-    //     return ('Data recieved');
-    // })->name('store');
-
-    // Route::get('test',[AddingCarController::class,'test']);
-    // Route::post('test\store',[AddingCarController::class,'store'])->name('store');
-   
-    Route::get('addcar',[CarController::class,'store']);
-
-    //***********************************/
-    //Task news
-    Route::get('addNews', function(){
-        return view ('news');
+    Route::get('camera',function(){
+        return 'Camera page';
     });
 
-    
+    Route::get('projector',function(){
+        return 'Projectors page';
+    });
+});
 
-    Route::get('cars',[CarController::class,'index']);
-    Route::get('editCar/{id}',[CarController::class,'edit']);
-    Route::put('updateCar/{id}',[CarController::class,'update'])->name('updateCar');
+// Route::fallback(function(){
+//     return redirect('/');
+// });
 
-    Route::get('addNews',[NewsController::class,'store']);
-    Route::post('news',[NewsController::class,'store'])->name('store');
+Route::get('cv',function(){
+    return view('cv');
+});
 
-    Route::get('newslist',[NewsController::class,'index']);
-    Route::get('editNew/{id}',[NewsController::class,'edit']);
-    Route::put('updateNew/{id}',[NewsController::class,'update'])->name('updateNew');
+// Route::get('login',function(){
+//     return view('login');
+// });
+
+// Route::post('receive',function(){
+//     return 'Data received';
+// })->name('receive');
+//*************************************************/
+            //coffee project
+Route::get('loginE',function(){
+return view("loginC");
+});
+
+Route::post('recieve',[CoffeeController::class,'recie'])->name('recie');
+Route::get('testy',[CoffeeController::class,'create']);
+Route::post('Storecoffee',[CoffeeController::class,'store'])->name('storecoffee');
+Route:: get ('coffeelist',[CoffeeController::class,'index']);
+
+
+
+//************************************* */
+             //News project
+             
+Route::post('storeNews',[NewsController::class, 'store'])->name('storeNews');
+
+Route::get('addNews',[NewsController::class, 'create']);
+
+Route::get('trashed',[NewsController::class, 'trashed']);
+Route::get('restoreNews/{id}',[NewsController::class, 'restore']);
+
+Route::get('News', [NewsController::class, 'index']);
+
+Route::get('editNews/{id}', [NewsController::class, 'edit']);
+
+Route::get('deleteNews/{id}', [NewsController::class, 'destroy']);
+
+Route::get('NewsDetails/{id}', [NewsController::class, 'show'])->name('NewsDetails');
+
+Route::put('updateNews/{id}', [NewsController::class, 'update'])->name('updateNews');
+
+
+//***************************************** */
+             //cars Project
+Route::get('login',[ExampleController::class, 'login']);
+
+Route::post('receive',[ExampleController::class, 'received'])->name('receive');
+
+Route::get('test1',[ExampleController::class, 'test1']);
+
+Route::post('storeCar',[CarController::class, 'store'])->name('storeCar');
+
+Route::get('addcar',[CarController::class, 'create']);
+
+Route::get('trashed',[CarController::class, 'trashed']);
+Route::get('restoreCar/{id}',[CarController::class, 'restore']);
+
+Route::get('cars', [CarController::class, 'index']);
+
+Route::get('editCar/{id}', [CarController::class, 'edit']);
+
+Route::get('deleteCar/{id}', [CarController::class, 'destroy']);
+
+Route::get('carDetails/{id}', [CarController::class, 'show'])->name('carDetails');
+
+Route::put('updateCar/{id}', [CarController::class, 'update'])->name('updateCar');
