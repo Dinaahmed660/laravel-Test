@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Car;
 use Symfony\Component\HttpFoundation\Test\Constraint\ResponseIsRedirected;
+use App\Traits\Common;
 
 class CarController extends Controller
-{
+{ use Common;
     private $columns = ['carTitle', 'description','published'];
 
     /**
@@ -36,12 +37,20 @@ class CarController extends Controller
         // $cars = new Car;
         // $cars->carTitle = $request->title;
         // $cars->description = $request->description;
-        $data = ($request->only($this->columns));
-        $data['published']=isset ($data['published'])?true:false;
-        $request->validate([
+        // $data = ($request->only($this->columns));
+        // $data['published']=isset ($data['published'])?true:false;
+        $massages=['carTitle.required'=>'العنوان مطلوب',
+        'description.required'=>'should be text'
+    ];
+        
+       $data= $request->validate([
             'carTitle'=>'required|string|max:5',
-            'description'=> 'required|string'
-            ]);    
+            'description'=> 'required|string',
+            'image'=>'required|mimes:png,jpg,jpeg|max:2048',
+            ],$massages); 
+            $filename=$this->uploadFile($request->image,'assets\images');
+            $data['image']= $filename;
+            $data['published']=isset($request['published']) ;  
             Car::create($data);
             return 'done';
 
@@ -69,7 +78,8 @@ class CarController extends Controller
     public function edit(string $id)
     {
         $car = Car::findOrFail($id);
-        return view('updateCar',compact('car'));
+        return 'done';
+       
     }
 
     /**
@@ -82,9 +92,28 @@ class CarController extends Controller
         // $data['published'] = isset($data['published'])? true:false;
 
         // Car::where('id', $id)->update($data);
+        $massages=['carTitle.required'=>'Enter the title',
+        'description.required'=>'should be text'
+    ];
+   
+       $data= $request->validate([
+            'carTitle'=>'required|string|max:5',
+            'description'=> 'required|string',
+            'image'=>'required|mimes:png,jpg,jpeg|max:2048',
+            ],$massages); 
+            $filename=$this->uploadFile($request->image,'assets\images');
+            $data['image']= $filename;
+            $data['published']=isset($request['published']) ; 
 
+            @foreach($data as $row)
+                $data['carTitle']=$row['carTitle'];
+                $data['description']=$row['description'];
+                $data['published']=$row['published'];
+                $data['image']=$row['image'];
+            @endforeach
+  
         Car::where('id', $id)->update($request->only($this->columns));
-        return 'Updated';
+        return view('updateCar',compact('car'));
     }
 
     /**
