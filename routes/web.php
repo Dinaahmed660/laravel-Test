@@ -3,10 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\CarController;
-use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostsController;
-use App\Http\Controllers\CoffeeController;
-
+use App\Http\Controllers\PlacesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,65 +67,40 @@ Route::get('cv',function(){
 // Route::post('receive',function(){
 //     return 'Data received';
 // })->name('receive');
-//*************************************************/
-            //coffee project
-Route::get('loginE',function(){
-return view("loginC");
-});
 
-Route::post('recieve',[CoffeeController::class,'recie'])->name('recie');
-Route::get('testy',[CoffeeController::class,'create']);
-Route::post('Storecoffee',[CoffeeController::class,'store'])->name('storecoffee');
-Route:: get ('coffeelist',[CoffeeController::class,'index']);
-
-
-
-//************************************* */
-             //News project
-             
-Route::post('storeNews',[NewsController::class, 'store'])->name('storeNews');
-
-Route::get('addNews',[NewsController::class, 'create']);
-
-Route::get('trashed',[NewsController::class, 'trashed']);
-Route::get('restoreNews/{id}',[NewsController::class, 'restore']);
-
-Route::get('News', [NewsController::class, 'index']);
-
-Route::get('editNews/{id}', [NewsController::class, 'edit']);
-
-Route::get('deleteNews/{id}', [NewsController::class, 'destroy']);
-
-Route::get('NewsDetails/{id}', [NewsController::class, 'show'])->name('NewsDetails');
-
-Route::put('updateNews/{id}', [NewsController::class, 'update'])->name('updateNews');
-
-
-//***************************************** */
-             //cars Project
 Route::get('login',[ExampleController::class, 'login']);
+Route::get('place',[ExampleController::class, 'place']);
+Route::get('blog',[ExampleController::class, 'blog']);
 
 Route::post('receive',[ExampleController::class, 'received'])->name('receive');
 
 Route::get('test1',[ExampleController::class, 'test1']);
 
-Route::get('upload',[ExampleController::class, 'showupload']);
+Route::get('showUpload',[ExampleController::class, 'showUpload']);
 
-Route::post('load',[ExampleController::class, 'upload'])->name('upload');
+Route::post('upload',[ExampleController::class, 'upload'])->name('upload');
 
 Route::post('storeCar',[CarController::class, 'store'])->name('storeCar');
 
-Route::get('addcar',[CarController::class, 'create']);
+Route::get('addCar',[CarController::class, 'create']);
 
 Route::get('trashed',[CarController::class, 'trashed']);
 Route::get('restoreCar/{id}',[CarController::class, 'restore']);
 
 Route::get('cars', [CarController::class, 'index']);
 
-Route::get('editCar/{id}', [CarController::class, 'edit']);
-
 Route::get('deleteCar/{id}', [CarController::class, 'destroy']);
 
 Route::get('carDetails/{id}', [CarController::class, 'show'])->name('carDetails');
 
+Route::get('editCar/{id}', [CarController::class, 'edit']);
 Route::put('updateCar/{id}', [CarController::class, 'update'])->name('updateCar');
+
+//**************************************************************** */
+Route::get('AddPlaces',[PlacesController::class, 'create']);
+
+Route::post('AddPlaces',[PlacesController::class, 'create'])->name('AddPlaces');
+
+Route::post('receive',[PlacesController::class, 'received'])->name('receive');
+
+Route::post('receive',[PlacesController::class, 'store'])->name('store');
